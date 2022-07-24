@@ -1,0 +1,64 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="mihail" id="create">
+        <createTable tableName="users">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="session">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="ticket">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="row" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cell" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="ticket"
+                                 constraintName="ticket_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+        <addForeignKeyConstraint baseColumnNames="session_id"
+                                 baseTableName="ticket"
+                                 constraintName="ticket_session"
+                                 referencedColumnNames="id"
+                                 referencedTableName="session"/>
+        <addUniqueConstraint tableName="ticket"
+                             constraintName="constraint_row_cell"
+                             columnNames="row, cell, session_id"/>
+    </changeSet>
+
+</databaseChangeLog>
